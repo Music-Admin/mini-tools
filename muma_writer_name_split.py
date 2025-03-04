@@ -19,7 +19,7 @@ def split_composer_names(df):
         expanded_values.columns = [
             f"Composer {composer_number} First Name",
             f"Composer {composer_number} Middle Name",
-            f"Composer {composer_number} Last Name"
+            f"Composer {composer_number} Surname"
         ]
 
         # Insert new columns in the correct position
@@ -45,7 +45,7 @@ def split_name(name):
 
 # Streamlit UI
 st.title("🎵 Composer Name Splitter")
-st.write("Upload an Excel or CSV file, and we'll split `Composer x Name` into `First Name`, `Middle Name`, and `Last Name`.")
+st.write("Upload an Excel or CSV file, and we'll split `Composer x Name` into `First Name`, `Middle Name`, and `Surname`.")
 
 # File upload
 uploaded_file = st.file_uploader("Upload a file", type=["xlsx", "csv"])
