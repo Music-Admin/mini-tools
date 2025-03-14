@@ -73,7 +73,8 @@ class PayslipGenerator:
         data = [["Category", "Amount"]]
         for key, value in self.details.items():
             if key not in ["Employee", "Rate", "Total"]:  # Exclude Employee & Rate from table
-                data.append([key, f"${value:.2f}"])
+                if value != 0:
+                    data.append([key, f"${value:.2f}"])
 
         # Add two blank rows before Total
         data.append(["", ""])
