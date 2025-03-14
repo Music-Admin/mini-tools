@@ -20,7 +20,7 @@ def find_header_row(file):
     file.seek(0)  # Reset file pointer after reading preview
     
     for i, row in df_preview.iterrows():
-        if {"Employee", "Rate", "Total"}.issubset(set(row.dropna().astype(str))):
+        if {"Employee", "Rate", "Net Pay"}.issubset(set(row.dropna().astype(str))):
             return i  # Return the row index where the headers start
     return None
 
@@ -72,14 +72,14 @@ class PayslipGenerator:
         # Payroll Table (Full-Width)
         data = [["Category", "Amount"]]
         for key, value in self.details.items():
-            if key not in ["Employee", "Rate", "Total"]:  # Exclude Employee & Rate from table
+            if key not in ["Employee", "Rate", "Net Pay"]:  # Exclude Employee & Rate from table
                 if value != 0:
                     data.append([key, f"${value:.2f}"])
 
-        # Add two blank rows before Total
+        # Add two blank rows before Net Pay
         data.append(["", ""])
         data.append(["", ""])
-        data.append(["Total", f"${self.details.get('Total', 0):.2f}"])
+        data.append(["Net Pay", f"${self.details.get('Net Pay', 0):.2f}"])
 
         table = Table(data, colWidths=[370, 150])
 
@@ -91,11 +91,11 @@ class PayslipGenerator:
             ("FONTNAME", (0, 0), (-1, 0), "Helvetica-Bold"),
             ("ALIGN", (0, 0), (-1, -1), "LEFT"),
             ("GRID", (0, 0), (-1, -1), 0.5, colors.grey),
-            ("FONTNAME", (-2, -1), (-1, -1), "Helvetica-Bold"),  # Bold for Total
+            ("FONTNAME", (-2, -1), (-1, -1), "Helvetica-Bold"),  # Bold for Net Pay
         ]
 
         # Apply alternating background color to rows
-        for i in range(1, row_count - 1):  # Skip header & total
+        for i in range(1, row_count - 1):  # Skip header & Net Pay
             if i % 2 == 0:
                 table_styles.append(("BACKGROUND", (0, i), (-1, i), colors.whitesmoke))
             else:
@@ -172,9 +172,9 @@ if uploaded_file:
     df = pd.read_csv(uploaded_file, header=header_row)  # Skip first 2 rows (header row after period)
 
     # Validate column presence
-    required_columns = {"Employee", "Rate", "Total"}
+    required_columns = {"Employee", "Rate", "Net Pay"}
     if not required_columns.issubset(df.columns):
-        st.error("CSV must contain at least Employee, Rate, and Total columns.")
+        st.error("CSV must contain at least Employee, Rate, and Net Pay columns.")
     else:
         if st.button("Generate Payslips ZIP"):
             zip_file = generate_zip(df, pay_period)
