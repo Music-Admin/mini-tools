@@ -26,7 +26,7 @@ def find_header_row(file):
 
 # Custom Payslip Generator
 class PayslipGenerator:
-    def __init__(self, employee_name, details, pay_period, logo_path="logo-large.png"):
+    def __init__(self, employee_name, details, pay_period, logo_path="https://raw.githubusercontent.com/Music-Admin/mini-tools/refs/heads/main/streamlit-apps/logo-large.png"):
         self.employee_name = employee_name
         self.details = details
         self.pay_period = pay_period
