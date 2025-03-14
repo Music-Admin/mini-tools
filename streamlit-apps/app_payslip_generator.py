@@ -56,7 +56,7 @@ class PayslipGenerator:
 
         # Employee Info (Left) & Payslip Info (Right)
         employee_text = Paragraph(f"<b>Employee:</b> {self.employee_name}", header_style)
-        rate_text = Paragraph(f"<b>Rate:</b> ${self.details.get('Rate', 0):.2f}", header_style)
+        rate_text = Paragraph(f"<b>Rate:</b> {self.details.get('Rate', '')}", header_style)
 
         # Ensure period does not wrap
         pay_period_text = Paragraph(f"<b>Period:</b> {self.pay_period}", right_aligned_style)
