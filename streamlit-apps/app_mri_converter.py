@@ -134,5 +134,5 @@ if uploaded_file:
 
     # Centered Download Button
     st.markdown('<div class="download-container">', unsafe_allow_html=True)
-    st.download_button("Download Compressed Report", output, file_name=compressed_filename, mime="text/csv")
+    st.download_button("Download MRI Report", output, file_name=compressed_filename, mime="text/csv")
     st.markdown("</div>", unsafe_allow_html=True)
