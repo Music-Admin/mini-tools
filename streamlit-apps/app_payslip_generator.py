@@ -73,6 +73,8 @@ class PayslipGenerator:
         data = [["Category", "Amount"]]
         for key, value in self.details.items():
             if key not in ["Employee", "Rate", "Net Pay"]:  # Exclude Employee & Rate from table
+                if pd.isna(value):
+                    value = 0  # Replace NaN with 0
                 if value != 0:
                     data.append([key, f"${value:.2f}"])
 
