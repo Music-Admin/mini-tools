@@ -1,0 +1,4 @@
+.vercel
+.aws-sam
+.env.development
+env.json

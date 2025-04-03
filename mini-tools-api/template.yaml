@@ -1,0 +1,108 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+
+Globals:
+  Function:
+    Timeout: 300
+    MemorySize: 3008
+    Runtime: python3.9
+    Handler: app.lambda_handler
+    CodeUri: .
+
+Resources:
+  MiniToolsFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: MiniToolsHandler
+      Role: !GetAtt MiniToolsExecutionRole.Arn
+      Events:
+        UploadFile:
+          Type: Api
+          Properties:
+            Path: /file-manager/upload
+            Method: POST
+
+        GenerateUploadUrl:
+          Type: Api
+          Properties:
+            Path: /file-manager/generate-upload-url
+            Method: POST
+
+        DownloadUrl:
+          Type: Api
+          Properties:
+            Path: /file-manager/download-url/{key}
+            Method: GET
+
+        DeleteFile:
+          Type: Api
+          Properties:
+            Path: /file-manager/delete/{key}
+            Method: DELETE
+
+        CompressFile:
+          Type: Api
+          Properties:
+            Path: /royalty-compressor/compress
+            Method: POST
+
+        CreateSession:
+          Type: Api
+          Properties:
+            Path: /session-manager/create-session
+            Method: POST
+
+        TrackUsage:
+          Type: Api
+          Properties:
+            Path: /session-manager/track-usage/{session_id}
+            Method: POST
+
+        GetSessionData:
+          Type: Api
+          Properties:
+            Path: /session-manager/session-data/{session_id}
+            Method: GET
+
+        OptionsRoute:
+          Type: Api
+          Properties:
+            Path: /{proxy+}
+            Method: OPTIONS
+
+  MiniToolsExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: mini-tools-execution-role
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: MiniToolsAccessPolicy
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - dynamodb:GetItem
+                  - dynamodb:PutItem
+                  - dynamodb:UpdateItem
+                Resource: !Sub arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/Sessions
+
+              - Effect: Allow
+                Action:
+                  - s3:GetObject
+                  - s3:PutObject
+                  - s3:DeleteObject
+                Resource: !Sub arn:aws:s3:::mini-tools-files/*
+
+              - Effect: Allow
+                Action:
+                  - logs:CreateLogGroup
+                  - logs:CreateLogStream
+                  - logs:PutLogEvents
+                Resource: arn:aws:logs:*:*:*
